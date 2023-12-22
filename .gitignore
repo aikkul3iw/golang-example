@@ -1,0 +1,47 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Project-specific binaries
+/bin/
+/vendor/
+
+# Dependency directories
+/vendor/
+/Godeps/
+
+# Output directories
+/_obj/
+/_test/
+
+# Log files
+*.log
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Go build artifacts
+*.o
+*.a
+
+# Compiled Go files
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.obj
+*.so
+
+# Output of the `go` coverage tool, specifically when used with `LiteIDE`
+*.out
+
+# Runtime, version, and config directories
+.idea/
+.vscode/
+*.iml
+*.idea
