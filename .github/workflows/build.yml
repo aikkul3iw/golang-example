@@ -38,4 +38,4 @@ jobs:
         sed -i "s/golang-example:.*/golang-example:$NEW_TAG/" gitops/golang-example/values.yaml
         git add gitops/golang-example/values.yaml
         git commit -m "Auto deploy with vesion $NEW_TAG"
-        git push https://${{ secrets.GIT_TOKEN }}@github.com/${{ secrets.GIT_REPOSITORY }}.git HEAD:main
+        git push https://${{ secrets.GIT_TOKEN }}@github.com/${{ secrets.GIT_REPOSITORY }}.git HEAD:master
