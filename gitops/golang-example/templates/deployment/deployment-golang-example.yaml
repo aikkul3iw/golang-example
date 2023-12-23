@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.golangExample.name }}
+  labels:
+    app: {{ .Values.golangExample.name }}
+    version: "{{ .Values.golangExample.image | regexFind "\\d+\\.\\d+\\.\\d+" }}"
+spec:
+  replicas: {{ .Values.golangExample.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.golangExample.name }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap/configmap-golang-example.yaml") . | sha256sum }}
+      labels:
+        app: {{ .Values.golangExample.name }}
+        version: "{{ .Values.golangExample.image | regexFind "\\d+\\.\\d+\\.\\d+" }}"
+    spec:
+      containers:
+        - name: {{ .Values.golangExample.name }}
+          image: "{{ .Values.golangExample.image }}"
+          imagePullPolicy: {{ .Values.golangExample.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: "configmap-{{ .Values.golangExample.name }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.golangExample.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+{{ toYaml .Values.golangExample.resources | indent 12 }}
+    {{- with .Values.golangExample.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.golangExample.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.golangExample.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
