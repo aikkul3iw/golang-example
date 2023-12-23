@@ -6,7 +6,7 @@ RUN go mod download
 COPY . .
 ARG VERSION
 ARG BUILD
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-X main.version=${VERSION} -X main.build=${BUILD}" -o golang-example .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-X main.version=${VERSION}" -o golang-example .
 
 FROM alpine:3.19.0
 RUN apk --no-cache add ca-certificates
