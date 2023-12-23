@@ -2,7 +2,7 @@ golangExample:
   name: golang-example
   replicaCount: 1
   port: 8080
-  image: aekkasit/golang-example:1.0.0
+  image: aekkasit/golang-example:v1.0.1
   pullPolicy: IfNotPresent
   service:
     type: ClusterIP
