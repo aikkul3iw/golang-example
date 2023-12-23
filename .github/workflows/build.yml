@@ -2,12 +2,8 @@ name: Build Go
 
 on:
   push:
-    branches: [ "master" ]
-  workflow_dispatch:
-
-env:
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -17,6 +13,9 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4.1.1
+    - name: Get tag version
+      id: vars
+      run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
     - name: Login to Docker Hub
       uses: docker/login-action@v3.0.0
       with:
@@ -28,5 +27,15 @@ jobs:
         context: .
         file: ./docker/Dockerfile
         push: true
-        build-args: VERSION=1.0.0
-        tags: ${{ secrets.DOCKER_USERNAME }}/golang-example:1.0.0
+        build-args: VERSION=${{ steps.vars.outputs.tag }}
+        tags: ${{ secrets.DOCKER_USERNAME }}/golang-example:${{ steps.vars.outputs.tag }}
+    - name: Update values.yaml
+      id: update_values
+      run: |
+        NEW_TAG=${{ steps.vars.outputs.tag }}
+        git config --global user.email "golang-example.com"
+        git config --global user.name "Golang Example"
+        sed -i "s/golang-example:.*/golang-example:$NEW_TAG/" gitops/golang-example/values.yaml
+        git add gitops/golang-example/values.yaml
+        git commit -m "Auto deploy with vesion $NEW_TAG"
+        git push https://${{ secrets.GIT_TOKEN }}@github.com/${{ secrets.GIT_REPOSITORY }}.git HEAD:main
