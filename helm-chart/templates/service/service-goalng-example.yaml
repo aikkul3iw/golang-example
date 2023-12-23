@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.golangExample.name }}
+  labels:
+    app: {{ .Values.golangExample.name }}
+    service: {{ .Values.golangExample.name }}
+spec:
+  type: {{ .Values.golangExample.service.type }}
+  ports:
+    - port: {{ .Values.golangExample.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ .Values.golangExample.name }}

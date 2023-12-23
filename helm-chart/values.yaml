@@ -1,0 +1,19 @@
+golangExample:
+  name: golang-example
+  replicaCount: 1
+  port: 8080
+  image: aekkasit/golang-example:1.0.0
+  pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8080
+  resources:
+    limits:  
+      cpu: 256m
+      memory: 512Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
